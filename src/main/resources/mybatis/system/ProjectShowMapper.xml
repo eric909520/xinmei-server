@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.project.system.mapper.ProjectShowMapper">
+
+    <resultMap type="com.backend.project.system.domain.ProjectShow" id="ProjectShowResult">
+        <result property="id" column="id"/>
+        <result property="projectName" column="project_name"/>
+        <result property="projectType" column="project_type"/>
+        <result property="picUrl" column="pic_url"/>
+        <result property="projectDetail" column="project_detail"/>
+        <result property="createUser" column="create_user"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+    <sql id="selectProjectShowVo">
+        select id, project_name, project_type, pic_url, project_detail, create_user, create_time ,update_user ,update_time ,remark from project_show
+    </sql>
+
+    <select id="selectProjectShowList" parameterType="com.backend.project.system.domain.ProjectShow" resultMap="ProjectShowResult">
+        <include refid="selectProjectShowVo"/>
+    </select>
+    <select id="selectProjectShowById" parameterType="Long" resultMap="ProjectShowResult">
+        <include refid="selectProjectShowVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProjectShow" parameterType="com.backend.project.system.domain.ProjectShow" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into project_show
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name,</if>
+            <if test="projectType != null and projectType != ''">project_type,</if>
+            <if test="picUrl != null ">pic_url,</if>
+            <if test="projectDetail != null ">project_detail,</if>
+            <if test="createUser != null ">create_user,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateUser != null ">update_user,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null ">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">#{projectName},</if>
+            <if test="projectType != null and projectType != ''">#{projectType},</if>
+            <if test="picUrl != null">#{picUrl},</if>
+            <if test="projectDetail != null">#{projectDetail},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateUser != null ">#{updateUser},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null ">#{remark},</if>
+
+        </trim>
+    </insert>
+
+    <update id="updateProjectShow" parameterType="com.backend.project.system.domain.ProjectShow">
+        update project_show
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name=#{projectName},</if>
+            <if test="projectType != null and projectType != ''">project_type=#{projectType},</if>
+            <if test="picUrl != null">pic_url=#{picUrl},</if>
+            <if test="projectDetail != null">project_detail=#{projectDetail},</if>
+            <if test="createUser != null">create_user=#{createUser},</if>
+            <if test="createTime != null ">create_time=#{createTime},</if>
+            <if test="updateUser != null ">update_user=#{updateUser},</if>
+            <if test="updateTime != null ">update_time=#{updateTime},</if>
+            <if test="remark != null ">remark=#{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProjectShowByIds" parameterType="String">
+        delete from project_show where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

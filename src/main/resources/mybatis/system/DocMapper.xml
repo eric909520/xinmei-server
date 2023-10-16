@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.project.system.mapper.DocMapper">
+
+    <resultMap type="Doc" id="DocResult">
+        <result property="enable" column="enable"/>
+        <result property="docType" column="doc_type"/>
+        <result property="link" column="link"/>
+        <result property="docName" column="doc_name"/>
+        <result property="typeName" column="type_name"/>
+        <result property="type" column="type"/>
+        <result property="langue" column="langue"/>
+        <result property="id" column="id"/>
+    </resultMap>
+
+    <sql id="selectDocVo">
+        select enable,
+               doc_type,
+               link,
+               doc_name,
+               type_name,
+               type,
+               langue,
+               id
+        from doc
+    </sql>
+
+    <select id="selectDocList" parameterType="Doc" resultMap="DocResult">
+        <include refid="selectDocVo"/>
+        <where>
+            enable = 1
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+            <if test="langue != null ">
+                and langue = #{langue}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDocById" parameterType="Long" resultMap="DocResult">
+        <include refid="selectDocVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDoc" parameterType="Doc" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into doc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="enable != null ">enable,
+            </if>
+            <if test="docType != null ">doc_type,
+            </if>
+            <if test="link != null  and link != ''">link,
+            </if>
+            <if test="docName != null  and docName != ''">doc_name,
+            </if>
+            <if test="typeName != null  and typeName != ''">type_name,
+            </if>
+            <if test="type != null ">type,
+            </if>
+            <if test="langue != null ">langue,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="enable != null ">#{enable},
+            </if>
+            <if test="docType != null ">#{docType},
+            </if>
+            <if test="link != null  and link != ''">#{link},
+            </if>
+            <if test="docName != null  and docName != ''">#{docName},
+            </if>
+            <if test="typeName != null  and typeName != ''">#{typeName},
+            </if>
+            <if test="type != null ">#{type},
+            </if>
+            <if test="langue != null ">#{langue},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateDoc" parameterType="Doc">
+        update doc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="enable != null ">enable = #{enable},
+            </if>
+            <if test="docType != null ">doc_type = #{docType},
+            </if>
+            <if test="link != null  and link != ''">link = #{link},
+            </if>
+            <if test="docName != null  and docName != ''">doc_name = #{docName},
+            </if>
+            <if test="typeName != null  and typeName != ''">type_name = #{typeName},
+            </if>
+            <if test="type != null ">type = #{type},
+            </if>
+            <if test="langue != null ">langue = #{langue},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+</mapper>

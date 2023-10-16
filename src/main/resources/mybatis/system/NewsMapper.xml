@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.project.system.mapper.NewsMapper">
+
+    <resultMap type="News" id="NewsResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="icon" column="icon"/>
+        <result property="simpleContent" column="simple_content"/>
+        <result property="content" column="content"/>
+        <result property="enable" column="enable"/>
+        <result property="createUser" column="create_user"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifiedUser" column="modified_user"/>
+        <result property="modifiedTime" column="modified_time"/>
+        <result property="langue" column="langue"/>
+    </resultMap>
+
+    <sql id="selectNewsVo">
+        select id, title, icon, simple_content, content, enable, create_user, create_time, modified_user, modified_time, langue
+        from news
+    </sql>
+
+    <select id="selectNewsList" parameterType="News" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        <where>
+            enable != 2
+            <if test="title != null  and title != ''">
+                and title like concat('%', #{title}, '%')
+            </if>
+            <if test="simpleContent != null  and simpleContent != ''">
+                and simple_content like concat('%', #{simpleContent}, '%')
+            </if>
+            <if test="enable != null ">
+                and enable = #{enable}
+            </if>
+            <if test="langue != null ">
+                and langue = #{langue}
+            </if>
+        </where>
+        order by enable desc, id desc
+    </select>
+
+    <select id="selectNewsListOpen" parameterType="News" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        <where>
+            enable = 1
+            <if test="langue != null ">
+                and langue = #{langue}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectNewsById" parameterType="long" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNewsBefore" parameterType="News" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        where enable = 1 and langue = #{langue} and id &lt; #{id}
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="selectNewsAfter" parameterType="News" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        where enable = 1 and langue = #{langue} and id > #{id}
+        limit 1
+    </select>
+
+    <insert id="insertNews" parameterType="News" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,
+            </if>
+            <if test="icon != null  and icon != ''">icon,
+            </if>
+            <if test="simpleContent != null  and simpleContent != ''">simple_content,
+            </if>
+            <if test="content != null  and content != ''">content,
+            </if>
+            <if test="enable != null ">enable,
+            </if>
+            <if test="createUser != null  and createUser != ''">create_user,
+            </if>
+            <if test="createTime != null ">create_time,
+            </if>
+            <if test="langue != null ">langue,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},
+            </if>
+            <if test="icon != null  and icon != ''">#{icon},
+            </if>
+            <if test="simpleContent != null  and simpleContent != ''">#{simpleContent},
+            </if>
+            <if test="content != null  and content != ''">#{content},
+            </if>
+            <if test="enable != null ">#{enable},
+            </if>
+            <if test="createUser != null  and createUser != ''">#{createUser},
+            </if>
+            <if test="createTime != null ">#{createTime},
+            </if>
+            <if test="langue != null ">#{langue},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateNews" parameterType="News">
+        update news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},
+            </if>
+            <if test="icon != null  and icon != ''">icon = #{icon},
+            </if>
+            <if test="simpleContent != null  and simpleContent != ''">simple_content = #{simpleContent},
+            </if>
+            <if test="content != null  and content != ''">content = #{content},
+            </if>
+            <if test="enable != null ">enable = #{enable},
+            </if>
+            <if test="modifiedUser != null  and modifiedUser != ''">modified_user = #{modifiedUser},
+            </if>
+            <if test="modifiedTime != null ">modified_time = #{modifiedTime},
+            </if>
+            <if test="langue != null ">langue = #{langue},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNewsById" parameterType="Long">
+        update news set enable = 2 where id = #{id}
+    </delete>
+
+</mapper>
