@@ -41,4 +41,6 @@ public interface IDocService {
      * @return 结果
      */
     public int updateDoc(Doc doc);
+
+    public int deleteDoc(Long id);
 }

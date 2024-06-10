@@ -30,12 +30,17 @@
     <select id="selectDocList" parameterType="Doc" resultMap="DocResult">
         <include refid="selectDocVo"/>
         <where>
-            enable = 1
+            <if test="docName != null and docName != '' ">
+                and doc_name = #{docName}
+            </if>
             <if test="type != null ">
                 and type = #{type}
             </if>
             <if test="langue != null ">
                 and langue = #{langue}
+            </if>
+            <if test="enable != null ">
+                and enable = #{enable}
             </if>
         </where>
     </select>
@@ -102,5 +107,9 @@
         </trim>
         where id = #{id}
     </update>
+
+    <delete id="deleteDoc" parameterType="long">
+        delete from doc where id = #{id}
+    </delete>
 
 </mapper>

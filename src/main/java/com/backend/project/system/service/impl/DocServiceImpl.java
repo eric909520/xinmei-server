@@ -63,4 +63,9 @@ public class DocServiceImpl implements IDocService {
         return docMapper.updateDoc(doc);
     }
 
+    @Override
+    public int deleteDoc(Long id) {
+        return docMapper.deleteDoc(id);
+    }
+
 }
